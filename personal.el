@@ -34,15 +34,13 @@
 (defvar package-list)
 (setq package-list '(clang-format
                      cmake-ide
-                     cmake-mode
                      company-irony
                      company-irony-c-headers
                      flycheck-irony
-                     flycheck-pyflakes
                      google-c-style
                      irony
-                     rtags
-                     yasnippet))
+                     rtags))
+;;                     yasnippet))
 ;; fetch the list of packages available
 (unless package-archive-contents
   (package-refresh-contents))
@@ -94,14 +92,14 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Package: yasnippet
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(require 'yasnippet)
-;; To get a bunch of extra snippets that come in super handy see:
-;; https://github.com/AndreaCrotti/yasnippet-snippets
-;; or use:
-;; git clone https://github.com/AndreaCrotti/yasnippet-snippets.git ~/.emacs.d/yassnippet-snippets/
-(add-to-list 'yas-snippet-dirs "~/.emacs.d/yasnippet-snippets/")
-(yas-global-mode 1)
-(yas-reload-all)
+;; (require 'yasnippet)
+;; ;; To get a bunch of extra snippets that come in super handy see:
+;; ;; https://github.com/AndreaCrotti/yasnippet-snippets
+;; ;; or use:
+;; ;; git clone https://github.com/AndreaCrotti/yasnippet-snippets.git ~/.emacs.d/yassnippet-snippets/
+;; (add-to-list 'yas-snippet-dirs "~/.emacs.d/yasnippet-snippets/")
+;; (yas-global-mode 1)
+;; (yas-reload-all)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -120,7 +118,7 @@
 ;; Setup irony-mode to load in c-modes
 (require 'irony)
 (require 'company-irony-c-headers)
-(require 'cl)
+;;(require 'cl)
 (add-hook 'c++-mode-hook 'irony-mode)
 (add-hook 'c-mode-hook 'irony-mode)
 (add-hook 'objc-mode-hook 'irony-mode)
@@ -151,40 +149,41 @@
   '(add-to-list
     'company-backends '(company-irony-c-headers
                         company-irony
-                        company-yasnippet
+;;                        company-yasnippet
                         company-clang
                         company-rtags
                         )
     )
   )
 
-(defun my-disable-semantic ()
-  "Disable the company-semantic backend."
-  (interactive)
-  (setq company-backends (delete '(company-irony-c-headers
-                                   company-irony company-yasnippet
-                                   company-clang company-rtags
-                                   company-semantic) company-backends))
-  (add-to-list
-   'company-backends '(company-irony-c-headers
-                       company-irony company-yasnippet
-                       company-clang company-rtags))
-  )
-(defun my-enable-semantic ()
-  "Enable the company-semantic backend."
-  (interactive)
-  (setq company-backends (delete '(company-irony-c-headers
-                                   company-irony company-yasnippet
-                                   company-clang) company-backends))
-  (add-to-list
-   'company-backends '(company-irony-c-headers
-                       company-irony company-yasnippet company-clang))
-  )
+;; (defun my-disable-semantic ()
+;;   "Disable the company-semantic backend."
+;;   (interactive)
+;;   (setq company-backends (delete '(company-irony-c-headers
+;;                                    company-irony ;;company-yasnippet
+;;                                    company-clang company-rtags
+;;                                    company-semantic) company-backends))
+;;   (add-to-list
+;;    'company-backends '(company-irony-c-headers
+;;                        company-irony ;;company-yasnippet
+;;                        company-clang company-rtags))
+;;   )
+;; (defun my-enable-semantic ()
+;;   "Enable the company-semantic backend."
+;;   (interactive)
+;;   (setq company-backends (delete '(company-irony-c-headers
+;;                                    company-irony ;;company-yasnippet
+;;                                    company-clang) company-backends))
+;;   (add-to-list
+;;    'company-backends '(company-irony-c-headers
+;;                        company-irony ;;company-yasnippet company-clang))
+
+
 
 ;; Zero delay when pressing tab
 (setq company-idle-delay 0)
-(define-key c-mode-map [(tab)] 'company-complete)
-(define-key c++-mode-map [(tab)] 'company-complete)
+;;(define-key c-mode-map [(tab)] 'company-complete)
+;;(define-key c++-mode-map [(tab)] 'company-complete)
 ;; Delay when idle because I want to be able to think
 (setq company-idle-delay 0.2)
 
@@ -199,9 +198,5 @@
 (semantic-remove-system-include "/usr/local/include/" 'c++-mode)
 (add-hook 'semantic-init-hooks
           'semantic-reset-system-include)
-
-
-(require 'cmake-mode)
-
 
 ;;; personal.el ends here
