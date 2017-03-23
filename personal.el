@@ -33,14 +33,13 @@
 ;; install additional package for C/C++ development
 (defvar package-list)
 (setq package-list '(clang-format
-                     cmake-ide
+;;                     cmake-ide
                      company-irony
                      company-irony-c-headers
                      flycheck-irony
                      google-c-style
                      irony
                      rtags))
-;;                     yasnippet))
 ;; fetch the list of packages available
 (unless package-archive-contents
   (package-refresh-contents))
@@ -65,12 +64,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Setup cmake-ide
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(require 'cmake-ide)
-(cmake-ide-setup)
-;; Set cmake-ide-flags-c++ to use C++11
-(setq cmake-ide-flags-c++ (append '("-std=c++11")))
-;; We want to be able to compile with a keyboard shortcut
-(global-set-key (kbd "C-c m") 'cmake-ide-compile)
+;; (require 'cmake-ide)
+;; (cmake-ide-setup)
+;; ;; Set cmake-ide-flags-c++ to use C++11
+;; (setq cmake-ide-flags-c++ (append '("-std=c++11")))
+;; ;; We want to be able to compile with a keyboard shortcut
+;; (global-set-key (kbd "C-c m") 'cmake-ide-compile)
 
 ;; Set rtags to enable completions and use the standard keybindings.
 ;; A list of the keybindings can be found at:
