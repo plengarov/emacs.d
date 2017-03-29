@@ -33,13 +33,10 @@
 ;; install additional package for C/C++ development
 (defvar package-list)
 (setq package-list '(clang-format
-;;                     cmake-ide
                      company-irony
                      company-irony-c-headers
                      flycheck-irony
-                     google-c-style
-                     irony
-                     rtags))
+                     irony))
 ;; fetch the list of packages available
 (unless package-archive-contents
   (package-refresh-contents))
@@ -58,28 +55,6 @@
 ;; Turn flycheck on everywhere
 (global-flycheck-mode)
 
-;; Load rtags and start the cmake-ide-setup process
-(require 'rtags)
-(rtags-enable-standard-keybindings c-mode-base-map "\C-xr")
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Setup cmake-ide
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; (require 'cmake-ide)
-;; (cmake-ide-setup)
-;; ;; Set cmake-ide-flags-c++ to use C++11
-;; (setq cmake-ide-flags-c++ (append '("-std=c++11")))
-;; ;; We want to be able to compile with a keyboard shortcut
-;; (global-set-key (kbd "C-c m") 'cmake-ide-compile)
-
-;; Set rtags to enable completions and use the standard keybindings.
-;; A list of the keybindings can be found at:
-;; http://syamajala.github.io/c-ide.html
-(setq rtags-autostart-diagnostics t)
-(rtags-diagnostics)
-(setq rtags-completions-enabled t)
-(rtags-enable-standard-keybindings)
-
-
 ;; clang-format can b<e triggered using C-M-tab
 (require 'clang-format)
 (global-set-key [C-M-tab] 'clang-format-region)
@@ -89,24 +64,8 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Package: yasnippet
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; (require 'yasnippet)
-;; ;; To get a bunch of extra snippets that come in super handy see:
-;; ;; https://github.com/AndreaCrotti/yasnippet-snippets
-;; ;; or use:
-;; ;; git clone https://github.com/AndreaCrotti/yasnippet-snippets.git ~/.emacs.d/yassnippet-snippets/
-;; (add-to-list 'yas-snippet-dirs "~/.emacs.d/yasnippet-snippets/")
-;; (yas-global-mode 1)
-;; (yas-reload-all)
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Set up code completion with company and irony
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;(require 'company)
-(require 'company-rtags)
-
 ;; Enable semantics mode for auto-completion
 (require 'cc-mode)
 (require 'semantic)
@@ -148,43 +107,17 @@
   '(add-to-list
     'company-backends '(company-irony-c-headers
                         company-irony
-;;                        company-yasnippet
                         company-clang
-                        company-rtags
                         )
     )
   )
 
-;; (defun my-disable-semantic ()
-;;   "Disable the company-semantic backend."
-;;   (interactive)
-;;   (setq company-backends (delete '(company-irony-c-headers
-;;                                    company-irony ;;company-yasnippet
-;;                                    company-clang company-rtags
-;;                                    company-semantic) company-backends))
-;;   (add-to-list
-;;    'company-backends '(company-irony-c-headers
-;;                        company-irony ;;company-yasnippet
-;;                        company-clang company-rtags))
-;;   )
-;; (defun my-enable-semantic ()
-;;   "Enable the company-semantic backend."
-;;   (interactive)
-;;   (setq company-backends (delete '(company-irony-c-headers
-;;                                    company-irony ;;company-yasnippet
-;;                                    company-clang) company-backends))
-;;   (add-to-list
-;;    'company-backends '(company-irony-c-headers
-;;                        company-irony ;;company-yasnippet company-clang))
-
-
-
 ;; Zero delay when pressing tab
-(setq company-idle-delay 0)
+;;(setq company-idle-delay 0)
 ;;(define-key c-mode-map [(tab)] 'company-complete)
 ;;(define-key c++-mode-map [(tab)] 'company-complete)
 ;; Delay when idle because I want to be able to think
-(setq company-idle-delay 0.2)
+;;(setq company-idle-delay 0.2)
 
 ;; Prohibit semantic from searching through system headers. We want
 ;; company-clang to do that for us.
