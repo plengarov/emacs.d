@@ -131,4 +131,5 @@
 (add-hook 'semantic-init-hooks
           'semantic-reset-system-include)
 
+(global-set-key (kbd "M-*") 'pop-tag-mark)
 ;;; personal.el ends here
