@@ -36,7 +36,8 @@
                      company-irony
                      company-irony-c-headers
                      flycheck-irony
-                     irony))
+                     irony
+                     ag))
 ;; fetch the list of packages available
 (unless package-archive-contents
   (package-refresh-contents))
