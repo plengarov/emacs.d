@@ -32,15 +32,19 @@
 
 ;; install additional package for C/C++ development
 (defvar package-list)
-(setq package-list '(clang-format
+(setq package-list '(ag
+                     rtags
+                     irony
+                     clang-format
+                     company-rtags
                      company-irony
                      company-irony-c-headers
-                     flycheck-irony
-                     irony
-                     ag))
+                     flycheck-rtags))
+
 ;; fetch the list of packages available
 (unless package-archive-contents
   (package-refresh-contents))
+
 ;; install the new packages
 (dolist (package package-list)
   (unless (package-installed-p package)
@@ -56,7 +60,7 @@
 ;; Turn flycheck on everywhere
 (global-flycheck-mode)
 
-;; clang-format can b<e triggered using C-M-tab
+;; clang-format can be triggered using C-M-tab
 (require 'clang-format)
 (global-set-key [C-M-tab] 'clang-format-region)
 
@@ -111,14 +115,14 @@
                         company-clang
                         )
     )
-  )
+)
 
 ;; Zero delay when pressing tab
-;;(setq company-idle-delay 0)
-;;(define-key c-mode-map [(tab)] 'company-complete)
-;;(define-key c++-mode-map [(tab)] 'company-complete)
+;; (setq company-idle-delay 0)
+;; (define-key c-mode-map [(tab)] 'company-complete)
+;; (define-key c++-mode-map [(tab)] 'company-complete)
 ;; Delay when idle because I want to be able to think
-;;(setq company-idle-delay 0.2)
+;; (setq company-idle-delay 0.2)
 
 ;; Prohibit semantic from searching through system headers. We want
 ;; company-clang to do that for us.
@@ -132,5 +136,39 @@
 (add-hook 'semantic-init-hooks
           'semantic-reset-system-include)
 
-(global-set-key (kbd "M-*") 'pop-tag-mark)
+;; ensure that we use only rtags checking
+(defun setup-flycheck-rtags ()
+  (interactive)
+  (flycheck-select-checker 'rtags)
+  ;; RTags creates more accurate overlays.
+  (setq-local flycheck-highlighting-mode nil)
+  (setq-local flycheck-check-syntax-automatically nil))
+
+;; only run this if rtags is installed
+(when (require 'rtags nil :noerror)
+  ;; make sure you have company-mode installed
+  (require 'company)
+  (define-key c-mode-base-map (kbd "M-.")
+    (function rtags-find-symbol-at-point))
+  (define-key c-mode-base-map (kbd "M-,")
+    (function rtags-find-references-at-point))
+  ;; disable prelude's use of C-c r, as this is the rtags keyboard prefix
+  (define-key prelude-mode-map (kbd "C-c r") nil)
+  ;; install standard rtags keybindings. Do M-. on the symbol below to
+  ;; jump to definition and see the keybindings.
+  (rtags-enable-standard-keybindings)
+  ;; comment this out if you don't have or don't use helm
+  (setq rtags-use-helm t)
+  ;; company completion setup
+  (setq rtags-autostart-diagnostics t)
+  (rtags-diagnostics)
+  (setq rtags-completions-enabled t)
+  (push 'company-rtags company-backends)
+  (global-company-mode)
+  (define-key c-mode-base-map (kbd "<C-tab>") (function company-complete))
+  ;; use rtags flycheck mode -- clang warnings shown inline
+  (require 'flycheck-rtags)
+  ;; c-mode-common-hook is also called by c++-mode
+  (add-hook 'c-mode-common-hook #'setup-flycheck-rtags))
+
 ;;; personal.el ends here
