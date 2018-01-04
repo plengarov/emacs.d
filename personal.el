@@ -31,6 +31,7 @@
 
 
 ;; install additional package for C/C++ development
+;;; Code:
 (defvar package-list)
 (setq package-list '(ag
                      rtags
@@ -171,4 +172,12 @@
   ;; c-mode-common-hook is also called by c++-mode
   (add-hook 'c-mode-common-hook #'setup-flycheck-rtags))
 
+
+(setq whitespace-line-column 110) ;; limit line length
+
+(setq initial-frame-alist `((top . 0) ;; This is overridden by my-center-frame later.
+                           (left . 0) ;; This is overridden by my-center-frame later.
+                           (width . 236) ; character
+                           (height . 80); lines
+                           ))
 ;;; personal.el ends here
