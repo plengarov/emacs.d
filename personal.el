@@ -40,7 +40,8 @@
                      company-rtags
                      company-irony
                      company-irony-c-headers
-                     flycheck-rtags))
+                     flycheck-rtags
+                     modern-cpp-font-lock))
 
 ;; fetch the list of packages available
 (unless package-archive-contents
@@ -64,10 +65,6 @@
 ;; clang-format can be triggered using C-M-tab
 (require 'clang-format)
 (global-set-key [C-M-tab] 'clang-format-region)
-
-;; Create clang-format file using Webkit style
-;; cp ~/work/clang/clang-format.txt ~/.clang-format
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Set up code completion with company and irony
@@ -118,12 +115,6 @@
     )
 )
 
-;; Zero delay when pressing tab
-;; (setq company-idle-delay 0)
-;; (define-key c-mode-map [(tab)] 'company-complete)
-;; (define-key c++-mode-map [(tab)] 'company-complete)
-;; Delay when idle because I want to be able to think
-;; (setq company-idle-delay 0.2)
 
 ;; Prohibit semantic from searching through system headers. We want
 ;; company-clang to do that for us.
@@ -139,6 +130,7 @@
 
 ;; ensure that we use only rtags checking
 (defun setup-flycheck-rtags ()
+  "Flycheck use only rtags checking."
   (interactive)
   (flycheck-select-checker 'rtags)
   ;; RTags creates more accurate overlays.
@@ -177,7 +169,10 @@
 
 (setq initial-frame-alist `((top . 0) ;; This is overridden by my-center-frame later.
                            (left . 0) ;; This is overridden by my-center-frame later.
-                           (width . 236) ; character
+                           (width . 274) ; character
                            (height . 80); lines
                            ))
+
+(modern-c++-font-lock-global-mode t)
+
 ;;; personal.el ends here
