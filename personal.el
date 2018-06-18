@@ -34,14 +34,13 @@
 ;;; Code:
 (defvar package-list)
 (setq package-list '(ag
-                     rtags
                      irony
                      clang-format
                      company-rtags
                      company-irony
                      company-irony-c-headers
-                     flycheck-rtags
-                     modern-cpp-font-lock))
+                     modern-cpp-font-lock
+                     ggtags))
 
 ;; fetch the list of packages available
 (unless package-archive-contents
@@ -62,9 +61,9 @@
 ;; Turn flycheck on everywhere
 (global-flycheck-mode)
 
-;; clang-format can be triggered using C-M-tab
+;; clang-format can be triggered using C-c C-f
 (require 'clang-format)
-(global-set-key [C-M-tab] 'clang-format-region)
+(global-set-key (kbd "C-c C-f") 'clang-format-region)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Set up code completion with company and irony
@@ -115,7 +114,6 @@
     )
 )
 
-
 ;; Prohibit semantic from searching through system headers. We want
 ;; company-clang to do that for us.
 (setq-mode-local c-mode semanticdb-find-default-throttle
@@ -128,41 +126,12 @@
 (add-hook 'semantic-init-hooks
           'semantic-reset-system-include)
 
-;; ensure that we use only rtags checking
-(defun setup-flycheck-rtags ()
-  "Flycheck use only rtags checking."
-  (interactive)
-  (flycheck-select-checker 'rtags)
-  ;; RTags creates more accurate overlays.
-  (setq-local flycheck-highlighting-mode nil)
-  (setq-local flycheck-check-syntax-automatically nil))
 
-;; only run this if rtags is installed
-(when (require 'rtags nil :noerror)
-  ;; make sure you have company-mode installed
-  (require 'company)
-  (define-key c-mode-base-map (kbd "M-.")
-    (function rtags-find-symbol-at-point))
-  (define-key c-mode-base-map (kbd "M-,")
-    (function rtags-find-references-at-point))
-  ;; disable prelude's use of C-c r, as this is the rtags keyboard prefix
-  (define-key prelude-mode-map (kbd "C-c r") nil)
-  ;; install standard rtags keybindings. Do M-. on the symbol below to
-  ;; jump to definition and see the keybindings.
-  (rtags-enable-standard-keybindings)
-  ;; comment this out if you don't have or don't use helm
-  (setq rtags-use-helm t)
-  ;; company completion setup
-  (setq rtags-autostart-diagnostics t)
-  (rtags-diagnostics)
-  (setq rtags-completions-enabled t)
-  (push 'company-rtags company-backends)
-  (global-company-mode)
-  (define-key c-mode-base-map (kbd "<C-tab>") (function company-complete))
-  ;; use rtags flycheck mode -- clang warnings shown inline
-  (require 'flycheck-rtags)
-  ;; c-mode-common-hook is also called by c++-mode
-  (add-hook 'c-mode-common-hook #'setup-flycheck-rtags))
+(require 'ggtags)
+(add-hook 'c-mode-common-hook
+          (lambda ()
+            (when (derived-mode-p 'c-mode 'c++-mode)
+              (ggtags-mode 1))))
 
 
 (setq whitespace-line-column 110) ;; limit line length
@@ -173,6 +142,7 @@
                            (height . 80); lines
                            ))
 
+(require 'modern-cpp-font-lock)
 (modern-c++-font-lock-global-mode t)
 
 ;;; personal.el ends here
