@@ -39,6 +39,7 @@
                      company-rtags
                      company-irony
                      company-irony-c-headers
+                     ;; company-cmake
                      modern-cpp-font-lock
                      ggtags))
 
@@ -63,7 +64,8 @@
 
 ;; clang-format can be triggered using C-c C-f
 (require 'clang-format)
-(global-set-key (kbd "C-c C-f") 'clang-format-region)
+(global-set-key (kbd "C-c C-v") 'clang-format-region)
+(global-set-key (kbd "C-c C-f") 'clang-format-buffer)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Set up code completion with company and irony
@@ -144,5 +146,22 @@
 
 (require 'modern-cpp-font-lock)
 (modern-c++-font-lock-global-mode t)
+
+;; workaround for projectile bug
+(setq projectile-project-compilation-cmd "")
+
+(scroll-bar-mode -1)
+
+;; org mode
+(require 'org)
+(require 'org-bullets)
+
+(add-hook 'org-mode-hook
+          (lambda ()
+            (org-bullets-mode t)))
+
+(setq org-hide-leading-stars t)
+
+;; end org mode
 
 ;;; personal.el ends here
