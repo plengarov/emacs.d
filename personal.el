@@ -100,8 +100,11 @@
 (add-hook 'org-mode-hook
           (lambda ()
             (org-bullets-mode t)))
-
 (setq org-hide-leading-stars t)
 ;; end org mode
+
+(require 'cppdoc)
+(cppdoc-mode +1)
+(define-key cppdoc-mode-map (kbd "s-c") 'cppdoc-command-map)
 
 ;;; personal.el ends here
